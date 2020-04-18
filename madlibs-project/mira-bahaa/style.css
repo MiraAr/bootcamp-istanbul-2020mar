@@ -1,6 +1,4 @@
-/**
- * Your CSS goes here.
- */
+
  .useflex {
     display: flex;
     justify-content: center;  
@@ -8,11 +6,6 @@
    margin-top: 60px;
    font-family: Goudy Old Style;
   } 
-  /* h1{
-   color: #acdae6; 
-   margin-top: 60px;
-   font-family: Goudy Old Style;
-  } */
   body {
    background-image: url("https://www.publicdomainpictures.net/pictures/80000/velka/little-red-riding-hood.jpg");
     background-color: #cccccc;
