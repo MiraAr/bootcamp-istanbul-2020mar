@@ -4,14 +4,14 @@ function parseStory(rawStory) {
   let verb =/v(?=])/; 
   let adj =/a(?=])/; 
   let arr= [];
-  for(let i=0;i<splitStory.length;i++){
-    if(splitStory[i].endsWith('.')||splitStory[i].endsWith(',')){ 
-      let dc=splitStory[i].slice(-1);
-      pos(splitStory[i].replace(dc,''));
+  for(const element of splitStory){
+    if(element.endsWith('.')||element.endsWith(',')){ 
+      let dc=element.slice(-1);
+      pos(element.replace(dc,''));
       arr.push(createObject(dc,''));
       }
     else{
-      pos(splitStory[i]);
+      pos(element);
       }
     } 
   function pos(word){
@@ -44,37 +44,101 @@ function parseStory(rawStory) {
 }
 
 function addElements(processedStory){
-  let arr= processedStory;
   let div= document.querySelector('.madLibsEdit');
   let par = document.createElement("p");
   div.appendChild(par);
-  for (let i=0;i<arr.length;i++){
-    if(arr[i].pos=='noun'){
+  for (const element of processedStory){
+    if(element.pos=='noun'){
       let nInput = document.createElement("input")
       nInput.type = "text";
       nInput.placeholder="noun";
+      nInput.maxLength="20";
       par.appendChild(nInput);
       }
-    else if(arr[i].pos=='verb'){
+    else if(element.pos=='verb'){
       let vInput = document.createElement("input");
         vInput.type = "text";
         vInput.placeholder="verb";
+        vInput.maxLength="20";
         par.appendChild(vInput);
       }
-    else if(arr[i].pos=='adj'){
+    else if(element.pos=='adj'){
       let aInput = document.createElement("input");
         aInput.type ='text';
         aInput.placeholder="adj";
+        aInput.maxLength="20";
         par.appendChild(aInput);
       }
     else{
-       let text = document.createTextNode(" "+arr[i].word+" ");
+       let text = document.createTextNode(" "+element.word+" ");
        par.appendChild(text);
       }
     }
 } 
+function preview(processedStory) {
+  let div= document.querySelector('.madLibsPreview');
+  let par = document.createElement("p");
+  div.appendChild(par);
+  for (const element of processedStory){
+     if(element.pos==='noun'){
+      let nOutput = document.createElement("span");
+        nOutput.textContent="(noun)";
+      par.appendChild(nOutput);
+      }
+    else if(element.pos==='verb'){
+      let vOutput = document.createElement("span");
+      vOutput.textContent= "(verb)";
+      par.appendChild(vOutput);
+      }
+    else if(element.pos==='adj'){
+      let aOutput = document.createElement("span");
+      aOutput.textContent= "(adj)";
+        par.appendChild(aOutput);
+      }
+    else{
+       let text = document.createTextNode(" "+element.word+" ");
+       par.appendChild(text);
+      }
+    }
+    
+}
 
+function moveNext(){
+  let inputArr = document.querySelectorAll("input[type='text']");
+  let j=1;
+  for (let i=0; i<inputArr.length; i++){
+    let next= inputArr[j++];
+    inputArr[i].addEventListener('keypress', function(e) {
+    if (e.keyCode === 13) {
+      next.focus();
+      }
+    });
+}
+}
+
+function liveUpdate(){
+  let inputArr = document.querySelectorAll("input");
+  let spans = document.querySelectorAll("p span");
+  for(let i=0; i<inputArr.length;i++){
+    let test =spans[i].textContent;
+    inputArr[i].addEventListener('input',function(){
+ 
+        spans[i].textContent=inputArr[i].value;
+        console.log(inputArr[i].value);
+        spans[i].style.color="#c1e1e8";
+        if(spans[i].textContent.length===0){
+          spans[i].innerText= test;
+          spans[i].style.color='red';
+        }
+      
+
+      });
+  }
+     
+}
 getRawStory().then(parseStory).then((processedStory) => {
-    console.log(processedStory);
     addElements(processedStory);
+    preview(processedStory);
+    moveNext();
+    liveUpdate();
   });
