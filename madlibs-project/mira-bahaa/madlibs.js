@@ -137,8 +137,7 @@ function liveUpdate(){
           spans[i].innerText= test;
           spans[i].style.color='red';
         }
-      
-
+    
       });
   }
      
